@@ -25,26 +25,69 @@ namespace Customer.Services
         {
             return _customerRepository.GetAllCustomer();
         }
-        public Task<GeneralResponse<CustomerResponseModel>> GetCustomerById(int id)
+        public async Task<GeneralResponse<CustomerResponseModel>> GetCustomerById(int id)
         {
-            return (_customerRepository.GetCustomerById(id));
-        }
-        public Task<GeneralResponse<CustomerResponseModel>> AddCustomer(CustomerRequestModel model)
-        {
-            var smallerPhoneNumber = model.PhoneNumber.Substring(2, 9);
-            model.PhoneNumber = smallerPhoneNumber;
-            return _customerRepository.AddCustomer(model);
-        }
-        public Task<GeneralResponse<CustomerResponseModel>> UpdateCustomer(int customerId, CustomerRequestModel model)
-        {
+            try
+            {
+                return await (_customerRepository.GetCustomerById(id));
 
-            var smallerPhoneNumber = model.PhoneNumber.Substring(2, 9);
-            model.PhoneNumber = smallerPhoneNumber;
-            return _customerRepository.UpdateCustomer(customerId, model);
-        }
-        public Task<GeneralResponse<CustomerResponseModel>> DeleteCustomer(int customerId)
+            }   
+            catch (Exception ex)
+            {
+                return new GeneralResponse<CustomerResponseModel>
+                {
+                    IsSuccess = false,
+                    Message = $"Message: {ex.Message}, Stack trace: {ex.StackTrace}"
+                };
+            }        }
+        public async Task<GeneralResponse<CustomerResponseModel>> AddCustomer(CustomerRequestModel model)
         {
-            return _customerRepository.DeleteCustomer(customerId);
+            try
+            {
+                var smallerPhoneNumber = model.PhoneNumber.Substring(2, 9);
+                model.PhoneNumber = smallerPhoneNumber;
+                return await _customerRepository.AddCustomer(model);
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse<CustomerResponseModel>
+                {
+                    IsSuccess = false,
+                    Message = $"Message: {ex.Message}, Stack trace: {ex.StackTrace}" 
+                };
+            }
+        }
+        public async Task<GeneralResponse<CustomerResponseModel>> UpdateCustomer(int customerId, CustomerRequestModel model)
+        {
+            try
+            {
+                var smallerPhoneNumber = model.PhoneNumber.Substring(2, 9);
+                model.PhoneNumber = smallerPhoneNumber;
+                return await _customerRepository.UpdateCustomer(customerId, model);
+            }
+            catch (Exception ex)    
+            {
+                return new GeneralResponse<CustomerResponseModel>
+                {
+                    IsSuccess = false,
+                    Message = $"Message: {ex.Message}, Stack trace: {ex.StackTrace}"
+                };
+            }
+        }
+        public async Task<GeneralResponse<CustomerResponseModel>> DeleteCustomer(int customerId)
+        {
+            try
+            {
+                return await _customerRepository.DeleteCustomer(customerId);
+            }   
+            catch (Exception ex)
+            {
+                return new GeneralResponse<CustomerResponseModel>
+                {
+                    IsSuccess = false,
+                    Message = $"Message: {ex.Message}, Stack trace: {ex.StackTrace}"
+                };
+            }
         }
     }
 }
